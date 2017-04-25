@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--ARToolKit plugin additions-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- init section is always evaluated once per architecture -->
+  <init>
+    <log text="JarTuto init"/>
+  </init>
+
+  <androidManifestUpdates>
+    <addPermission android:name="android.permission.CAMERA"/>
+    <addFeature android:name="android.hardware.camera"/>
+    <addFeature android:name="android.hardware.camera.autofocus"/>
+  </androidManifestUpdates>
+
+
+  <resourceCopies>
+    <copyFile src="$S(PluginDir)/lib/myJar.jar" dst="$S(BuildDir)/libs/myJar.jar" />
+  </resourceCopies>
+
+
+  <!-- optional additions to the GameActivity imports in GameActivity.java -->
+  <gameActivityImportAdditions>
+    <insert>
+      import android.widget.Toast;
+      import android.hardware.Camera;
+      import android.hardware.Camera.CameraInfo;
+      import android.hardware.Camera.Parameters;
+      import android.hardware.Camera.PreviewCallback;
+      import android.graphics.SurfaceTexture;
+      import android.graphics.ImageFormat;
+      import android.graphics.PixelFormat;
+      import java.util.List;
+      import java.io.IOException;
+      import android.util.Log;
+      import comPackage.TestJNI;
+    </insert>
+  </gameActivityImportAdditions>
+
+  <gameActivityClassAdditions>
+    <insert>
+
+      public native boolean GetJNIData(int data);
+      public void AndroidThunkJava_GetMessage() {
+
+        try
+        {
+          Log.debug("Java JNI Worked !");
+
+          int testJNIValue = new TestJNI().testJNI(); // 250
+
+          if(testJNIValue == 250)
+            GetJNIData(1);
+        }
+        catch (Exception e)
+        {
+          Log.debug("Failed with exception " + e.getMessage());
+        }
+      }
+
+
+    </insert>
+  </gameActivityClassAdditions>
+
+  <!-- optional additions to GameActivity onCreate in GameActivity.java -->
+  <gameActivityOnCreateAdditions>
+    <insert>
+      //Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+      //AndroidThunkJava_Toast();
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+
+</root>
