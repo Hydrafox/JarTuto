@@ -57,7 +57,6 @@ void ABlueprintCommunication::myLog() {
 
 
 
-![Call C++ Method from Blueprint](https://github.com/Hydrafox/JarTuto/img/Readme img1.png)
 
 
 
@@ -112,7 +111,6 @@ Use CalledFromCpp(200); in a C++ function to call your Blueprint event.
 
 
 
-![Call Blueprint event from C++](https://github.com/Hydrafox/JarTuto/img/Readme img2.png)
 
 
 
@@ -373,7 +371,6 @@ You can use differents type of variables
 
 
 
-![Java variables to JNI variables](https://github.com/Hydrafox/JarTuto/img/Readme img3.png)
 
 
 
@@ -422,7 +419,6 @@ Before starting this part, I recommand you to have this architecture in MyProjec
 
 
 
-![Unreal sources architecture](https://github.com/Hydrafox/JarTuto/img/Readme img4.png)
 
 
 
