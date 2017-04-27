@@ -25,7 +25,7 @@ Blueprint Communication
 
 We will work in JarTuto C++ Blank project. We will begin with a BlueprintCommunication Actor class and create a blueprint class from it.
 
-To manage a communication from Blueprint to C++, we need to use a macro UPROPERTY() just above your function definition in h file.
+To manage a communication from Blueprint to C++, we need to use a macro *UPROPERTY()* just above your function definition in h file.
 
 ```cpp
 UFUNCTION(BlueprintCallable, Category = "#Log")
@@ -48,32 +48,7 @@ void ABlueprintCommunication::myLog() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- Call C++ Method from Blueprint -
+**- Call C++ Method from Blueprint -**
 
 
 
@@ -94,68 +69,18 @@ Use CalledFromCpp(200); in a C++ function to call your Blueprint event.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ![Call Blueprint event from C++](https://github.com/Hydrafox/JarTuto/blob/master/img/Readme%20img2.png)
 
-- Call Blueprint event from C++ -
+**- Call Blueprint event from C++ -**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 ## C++ -> JNI
 
 
-For this part, we will create a new C++ Actor class called JavaCommunication 
+For this part, we will create a new C++ Actor class called *JavaCommunication*
 
 JNI will only be available on your mobile, that's why we need to delimited our JNI code in cpp file by using
 
@@ -176,7 +101,7 @@ We will need to include some tools to make it work. Place the code below inside 
 #define LOG_TAG "CameraLOG" // Used to print log with __android_log_print
 ```
 
-__android_log_print will be used to print some logs from C++ to android side. You will need to use adb logcat in command line to catch them.
+*__android_log_print* will be used to print some logs from C++ to android side. You will need to use adb logcat in command line to catch them.
 
 We will also add some variables 
 
@@ -206,7 +131,7 @@ We finally obtain
 
 - Java Environment
 
-We will create a initEnvironment() function
+We will create a *initEnvironment()* function
 
 .h
 ```cpp
@@ -225,7 +150,7 @@ return 0;
 }
 ```
 
-We will use an int as return value even if we don't manage it. It's just to show how to use JNI global variable (JNI_OK and JNI_ERR) to detect an error.
+We will use an int as return value even if we don't manage it. It's just to show how to use JNI global variable (*JNI_OK* and *JNI_ERR*) to detect an error.
 
 ```cpp
 Call this function in BeginPlay()
@@ -236,7 +161,7 @@ void AJavaCommunication::BeginPlay()
 }
 ```
 
-Initialise the Java environment in  initEnvironment()
+Initialise the Java environment in *initEnvironment()*
 
 ```cpp
 javaEnvironment = FAndroidApplication::GetJavaEnv();
@@ -249,12 +174,12 @@ Now our environment is ready, we will initialise the java method to allow us to 
 AndroidThunkJava_GetMessage = FJavaWrapper::FindMethod(javaEnvironment, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GetMessage", "()V", false);
 ```
 
-Let's talk about the arguments. In this example we added ()V to void argument and void return. 
+Let's talk about the arguments. In this example we added *()V* to void argument and void return. 
 We will write our arguments inside the parenthesis, and our return value outside.
 
-If we want to add an int as argument, we will insert I inside the parenthesis (I)V, and if we want to return a string, we will use  ()Ljava/lang/String; for a String.
-If you want a float array, followed by a boolean, you will use ([F;Z)V
-As you saw previously, if you want to use an object you will use L + your object + ;
+If we want to add an int as argument, we will insert I inside the parenthesis *(I)V*, and if we want to return a string, we will use  *()Ljava/lang/String;* for a String.
+If you want a float array, followed by a boolean, you will use *([F;Z)V*
+As you saw previously, if you want to use an object you will use *L* + *your object* + *;*
 
 You will see a pretty good article in rgagnon.com which bring more explanation about these arguments.
 
@@ -277,23 +202,23 @@ return JNI_OK;
 ```
 
 AddOnScreenDebugMessage print on your mobile screen (during 200 seconds in our exemple)
-GEngine->AddOnScreenDebugMessage
+*GEngine->AddOnScreenDebugMessage*
 
 UE_LOG print on your Unreal Output Log 
 Display it in Window/Developper Tools/Output Log or click on the message on the bottom-right after clicking on the Launch button
-UE_LOG
+*UE_LOG*
 
 __android_log_print check your android log
 Display it by using the adb logcat command (in command prompt) while you try to Launch your app.
-__android_log_print
+*__android_log_print*
 
 You can also print them in an external file with adb logcat > myFile.txt (it will be creating in the current command window path)
 If adb doesn't work, you can find it in your android sdk path : android-sdk/platform-tools/adb.exe
 Go there and open a command line in your explorer (shift + right click -> Open command window here) and use your command
-adb.exe logcat
+*adb.exe logcat*
 
 Or print all stack in a txt file
-adb.exe logcat > C:/... yourPath .../myFile.txt
+*adb.exe logcat > C:/... yourPath .../myFile.txt*
 
 
 
@@ -365,7 +290,7 @@ if (AndroidThunkJava_GetMessage && javaEnvironment) {
 }
 ```
 
-If you want to return an int for example, you will need to use FjavaWrapper::CallIntMethod instead.  As I didn't tried to return a value, I won't give your more details.
+If you want to return an int for example, you will need to use *FjavaWrapper::CallIntMethod* instead.  As I didn't tried to return a value, I won't give your more details.
 
 We will increase jniValue just below. If it's working fine, we will be able to display some incrementing values. In every case, we won't spam to keep a look on our logs.
 
@@ -377,7 +302,7 @@ We will increase jniValue just below. If it's working fine, we will be able to d
 
 During the next part we will see how to call a C++ function from Java. Here is how to properly define our function.
 We have to respect some rules :
-- GetJNIData Will be the name of the method called. From Java will use GetJNIData(200);
+*GetJNIData* Will be the name of the method called. From Java will use GetJNIData(200);
 
 Java and C++ don't use the same variable format. That's when all Java variables are converted to a jni variables, and to a C++ variables. 
 Java int -> JNI jint -> C++ int
@@ -445,7 +370,7 @@ Before starting this part, I recommand you to have this architecture in MyProjec
 
 
 
-lib will contains our jar file, private contains our cpp files, public contains our h files. JarTuto and JarTutoGameModeBase are automatically generated when we created our C++ project. You will need to create a JarTuto_APL.xml file to create our Java code.
+lib will contains our jar file, private contains our cpp files, public contains our h files. *JarTuto* and *JarTutoGameModeBase* are automatically generated when we created our C++ project. You will need to create a *JarTuto_APL.xml* file to create our Java code.
 
 We will add a link to our xml in our build.cs file, in the constructor
 
@@ -460,7 +385,7 @@ if (Target.Platform == UnrealTargetPlatform.Android)
 
 ### - JarTuto_APL.xml
 
-Create your xml file, in the same directory as our build.cs, with these initial parameters. I kept the camera access and differents imports to help you to know where and how to place your component access.
+Create your xml file, in the same directory as our *build.cs*, with these initial parameters. I kept the camera access and differents imports to help you to know where and how to place your component access.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -513,7 +438,7 @@ import android.util.Log;
 	</gameActivityOnCreateAdditions>
 </root>
 Now we will complete our xml file to add our java function
-Open MyProject_APL.xml
+Open *MyProject_APL.xml*
 
 We will insert our code between these tags
 
@@ -553,7 +478,7 @@ public void AndroidThunkJava_GetMessage()
 }
 ```
 
-We instantiate a TestJNI class which is the class contained in our jar file. This class has a testJNI method which return 250. If we successfully return this value, we will call our C++ function to increment our jniValue.
+We instantiate a *TestJNI* class which is the class contained in our jar file. This class has a *testJNI* method which return 250. If we successfully return this value, we will call our C++ function to increment our *jniValue*.
 
 
 
@@ -568,15 +493,15 @@ That's why we will see how to integrate a jar file to our code.
 ## Java -> Jar
 
 
-Before starting, I have some things to explain about how to have a good working jar. When I write this tutorial, the actual jdk version is 1.8.0_121 and CodeWorks make us installing the 1.8.0_77
-Even by trying a lot, I wasn't able to make the 1.8 version working. That's why I will recommand you to install the jdk 1.7 at the Oracle Archive.
+Before starting, I have some things to explain about how to have a good working jar. When I write this tutorial, the actual jdk version is *1.8.0_121* and CodeWorks make us installing the *1.8.0_77*
+Even by trying a lot, I wasn't able to make the *1.8* version working. That's why I will recommand you to install the jdk *1.7* at the Oracle Archive.
 If you want to compile with eclipse (or another software) you may prefer download the jre.
 
 
 ### - Creating a Jar file
 
 
-I will give you 3 ways to create your jar file. Before, I will ask you to place all your .java in a package named in our example: comPackage. Do not leave them in a default package (right click on your package -> new -> package and move your class inside).
+I will give you 3 ways to create your jar file. Before, I will ask you to place all your .java in a package named in our example: *comPackage*. Do not leave them in a default package (right click on your package -> new -> package and move your class inside).
 
 
 - 1 - Eclipse
@@ -590,7 +515,7 @@ Select your project, File -> Export -> Java/JAR file -> Next -> Select your expo
 - 2 - Command Line – Java Home
 
 
-After installing CodeWorks, your Java_Home may point to this folder, and so the jdk used by Unreal. To find your Environment Variables (in Window 7) : Click on the Start button -> Right click on Computer -> Properties -> Advanced system settings -> Environment Variables... and set the JAVA_HOME variable to your jdk 1.7 repertory (not the bin folder).
+After installing CodeWorks, your Java_Home may point to this folder, and so the jdk used by Unreal. To find your Environment Variables (in Window 7) : Click on the Start button -> Right click on Computer -> Properties -> Advanced system settings -> Environment Variables... and set the *JAVA_HOME* variable to your *jdk 1.7* repertory (not the bin folder).
 
 Now you can find your .java file and compile them. Use Shift + Righ click to display the "Open command window here" option, and click on it. Now use the command line: javac fileName.java  or javac *.java  depending of your needs. 
 
@@ -598,10 +523,10 @@ Now you can find your .java file and compile them. Use Shift + Righ click to dis
 - 3 - Commande Line – No configuration need
 
 The best method to rapidly test. Go to your jdk, and open its bin folder. Use Shift + Righ click to display the "Open command window here" option, and click on it. Now use the command line : 
-javac.exe pathOfYourJavaFile.java  It will compile your file to the pathOfYourJavaFile.java directory.
+*javac.exe pathOfYourJavaFile.java*  It will compile your file to the pathOfYourJavaFile.java directory.
 
 
-If you used the 2 or 3 methods, you will need to create manually your jar file. For that, open a command line in your bin folder, and use the command  jar cf myJar.jar comPackage/TestJNI.class 
+If you used the 2 or 3 methods, you will need to create manually your jar file. For that, open a command line in your bin folder, and use the command  *jar cf myJar.jar comPackage/TestJNI.class*
 
 - Checking your class version
 
@@ -641,7 +566,7 @@ Here is an array to interpret these values
  52       0           1.8
 ```
 
-If you obtained 51 . 0 that mean you well compiled your java file with your 1.7 jdk
+If you obtained *51 . 0* that mean you well compiled your java file with your *1.7 jdk*
 
 
 
@@ -657,15 +582,15 @@ If you obtained 51 . 0 that mean you well compiled your java file with your 1.7 
 
 
 
-Importing your jar file in your _APL.xml
+Importing your jar file in your *_APL.xml*
 
-Add your myJar.jar file in MyProject/Source/MyProject/lib
-
-
-Now open MyProject_APL.xml
+Add your myJar.jar file in *MyProject/Source/MyProject/lib*
 
 
-Proguard is used to modify the name of your class and protect your code. That's why we may need to add an exception to our proguard. Like that we will still being able to call our class by its name.
+Now open *MyProject_APL.xml*
+
+
+*Proguard* is used to modify the name of your class and protect your code. That's why we may need to add an exception to our proguard. Like that we will still being able to call our class by its name.
 
 I'm not sure when we need to use it because it's working for me even without it. If you have a problem to use your class, test to configure proguard.
 Here are some hint for you to test and search, they are not a working solution and are not tested, it's just for you to better search for your own solution.
@@ -682,10 +607,10 @@ Here are some hint for you to test and search, they are not a working solution a
 
 
 
-We will need to duplicate our jar to the intermediate directory. Sometimes we delete our Binaries, Intermediate and Saved folder to solve a problem. That's why it's better to create the copy directly in you xml code than duplicated manually the jar file. (MyProject\Intermediate\Android\APK\libs)
+We will need to duplicate our jar to the intermediate directory. Sometimes we delete our *Binaries*, *Intermediate* and *Saved* folder to solve a problem. That's why it's better to create the copy directly in you xml code than duplicated manually the jar file. (*MyProject\Intermediate\Android\APK\libs*)
 
-PluginDir is the directory where you have your _APL.xml file that you defined in build.cs when you had the AdditionalPropertiesForReceipt.Add(new ReceiptProperty("AndroidPlugin", (pluginPath + "/JarTuto_APL.xml")));
-BuildDir is the APK directory in your intermediate folder
+*PluginDir* is the directory where you have your *_APL.xml* file that you defined in *build.cs* when you had the *AdditionalPropertiesForReceipt.Add(new ReceiptProperty("AndroidPlugin", (pluginPath + "/JarTuto_APL.xml")));*
+*BuildDir* is the APK directory in your intermediate folder
 
 ```xml
   <resourceCopies>
@@ -696,7 +621,7 @@ BuildDir is the APK directory in your intermediate folder
 ```
 
 
-Add the import ligne just below the others import in the gameActivityImportAdditions/insert
+Add the import ligne just below the others import in the *gameActivityImportAdditions/insert*
 
 ```xml
 import comPackage.TestJNI;
@@ -709,7 +634,7 @@ import comPackage.TestJNI;
 
 Method not found
 
-It can happens that your java method is not found or any other problem. That mean your xml is not read fine. You can try to delete the Binaries, Intermediate and Saved folder, right-click on your MyProject.uproject and click on Generate Visual Studio project files. Check if your xml content is still here, rebuild, compile launch again. Keep a look on your Unreal Output Logs, and also your adb logcat.
+It can happens that your java method is not found or any other problem. That mean your xml is not read fine. You can try to delete the Binaries, Intermediate and Saved folder, right-click on your *MyProject.uproject* and click on *Generate Visual Studio project files*. Check if your xml content is still here, rebuild, compile launch again. Keep a look on your Unreal Output Logs, and also your adb logcat.
 
 
 
