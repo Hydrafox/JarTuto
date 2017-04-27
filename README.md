@@ -1,6 +1,6 @@
-Unreal – Android – Blueprint to Java
+# Unreal – Android – Blueprint to Java
 
-Purpose  
+## Purpose  
 
 We may need to access to the mobile component like the camera or differents captors. Accessing to these components require an access to the Android Java Sdk.
 
@@ -10,8 +10,7 @@ Blueprint -> C++ -> JNI -> Java -> Jar
 
 
 
-
-Blueprint -> C++
+## Blueprint -> C++
 
 
 In this part you will have a few informations, if you need more you can check the unreal tutorials
@@ -28,20 +27,22 @@ We will work in JarTuto C++ Blank project. We will begin with a BlueprintCommuni
 
 To manage a communication from Blueprint to C++, we need to use a macro UPROPERTY() just above your function definition in h file.
 
+```cpp
 UFUNCTION(BlueprintCallable, Category = "#Log")
 void myLog();
-
+```
 
 Don't forget to implement you function in cpp file.
 
+```cpp
 void ABlueprintCommunication::myLog() {
 	// Your code
 }
+```
 
 
 
-
-
+![Call C++ Method from Blueprint](https://github.com/Hydrafox/JarTuto/blob/master/img/Readme%20img1.png)
 
 
 
@@ -79,9 +80,10 @@ void ABlueprintCommunication::myLog() {
 
 You can also call a Blueprint event from your C++ code :
 
+```cpp
 UFUNCTION(BlueprintImplementableEvent, Category = "#Log")
 void CalledFromCpp(int value);
-
+```
 
 
 Use CalledFromCpp(200); in a C++ function to call your Blueprint event.
@@ -118,6 +120,7 @@ Use CalledFromCpp(200); in a C++ function to call your Blueprint event.
 
 
 
+![Call Blueprint event from C++](https://github.com/Hydrafox/JarTuto/blob/master/img/Readme%20img2.png)
 
 - Call Blueprint event from C++ -
 
@@ -149,38 +152,43 @@ Use CalledFromCpp(200); in a C++ function to call your Blueprint event.
 
 
 
-C++ -> JNI
+## C++ -> JNI
 
 
 For this part, we will create a new C++ Actor class called JavaCommunication 
 
 JNI will only be available on your mobile, that's why we need to delimited our JNI code in cpp file by using
 
+```cpp
 #if PLATFORM_ANDROID
 
 #endif
-
+```
 
 
 We will need to include some tools to make it work. Place the code below inside the previous condition, on top of all methods.
 
+```cpp
 #include "../../../Core/Public/Android/AndroidApplication.h"
 #include "../../../Launch/Public/Android/AndroidJNI.h"
 #include <android/log.h>
 
 #define LOG_TAG "CameraLOG" // Used to print log with __android_log_print
+```
 
 __android_log_print will be used to print some logs from C++ to android side. You will need to use adb logcat in command line to catch them.
 
 We will also add some variables 
 
+```cpp
 int jniValue = 0; // We will increment it later to check if the Java communication worked
 JNIEnv* javaEnvironment = NULL; // Will contain JNI when initialized
 static jmethodID AndroidThunkJava_GetMessage; // Java function which will be called later
-
+```
 
 We finally obtain 
 
+```cpp
 #if PLATFORM_ANDROID
 	#include "../../../Core/Public/Android/AndroidApplication.h"
 	#include "../../../Launch/Public/Android/AndroidJNI.h"
@@ -192,7 +200,7 @@ We finally obtain
 	JNIEnv* javaEnvironment = NULL;
 	static jmethodID AndroidThunkJava_GetMessage;
 #endif
-
+```
 
 
 
@@ -201,12 +209,12 @@ We finally obtain
 We will create a initEnvironment() function
 
 .h
-
+```cpp
 int initEnvironment();
-
+```
 
 .cpp
-
+```cpp
 int AJavaCommunication::initEnvironment() {
 #if PLATFORM_ANDROID
 
@@ -215,26 +223,31 @@ int AJavaCommunication::initEnvironment() {
 #endif
 return 0;
 }
+```
 
 We will use an int as return value even if we don't manage it. It's just to show how to use JNI global variable (JNI_OK and JNI_ERR) to detect an error.
 
+```cpp
 Call this function in BeginPlay()
 void AJavaCommunication::BeginPlay()
 {
 	Super::BeginPlay();	
 	initEnvironment();
 }
-
+```
 
 Initialise the Java environment in  initEnvironment()
 
+```cpp
 javaEnvironment = FAndroidApplication::GetJavaEnv();
 if (!javaEnvironment) return JNI_ERR;
-
+```
 
 Now our environment is ready, we will initialise the java method to allow us to call it from C++
 
+```cpp
 AndroidThunkJava_GetMessage = FJavaWrapper::FindMethod(javaEnvironment, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_GetMessage", "()V", false);
+```
 
 Let's talk about the arguments. In this example we added ()V to void argument and void return. 
 We will write our arguments inside the parenthesis, and our return value outside.
@@ -250,6 +263,7 @@ You will see a pretty good article in rgagnon.com which bring more explanation a
 
 We will finish this function with some logs
 
+```cpp
 if (!AndroidThunkJava_GetMessage)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, TEXT("ERROR GEngine: AndroidThunkJava_GetMessage not found"));
@@ -260,7 +274,7 @@ if (!AndroidThunkJava_GetMessage)
 
 GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, TEXT("Loading successful"));
 return JNI_OK;
-
+```
 
 AddOnScreenDebugMessage print on your mobile screen (during 200 seconds in our exemple)
 GEngine->AddOnScreenDebugMessage
@@ -287,6 +301,7 @@ adb.exe logcat > C:/... yourPath .../myFile.txt
 
 Full function
 
+```cpp
 int AJavaCommunication::initEnvironment() {
 #if PLATFORM_ANDROID
 
@@ -309,19 +324,21 @@ int AJavaCommunication::initEnvironment() {
 #endif
 return 0;
 }
+```
 
 
-
-- Tick
+### - Tick
 
 
 You should have a Tick definition in your h file
 
+```cpp
 virtual void Tick(float DeltaTime) override;
-
+```
 
 Implement it in your cpp file if it's not already done, and add an Android condition
 
+```cpp
 void AJavaCommunication::Tick(float DeltaTime) 
 {
 	Super::Tick(DeltaTime);
@@ -332,19 +349,21 @@ void AJavaCommunication::Tick(float DeltaTime)
 
 	#endif
 }
-
+```
 
 
 
 I'll execute my code example in a tick, but place your code in the place you want.
 We will begin by checking if our environment and our method has been well loaded, and call our java method.
 
+```cpp
 if (AndroidThunkJava_GetMessage && javaEnvironment) {
 	FJavaWrapper::CallVoidMethod(javaEnvironment, FJavaWrapper::GameActivityThis, AndroidThunkJava_GetMessage);			
 
 	if(jniValue > 0 && jniValue < 10)
 		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, FString::FromInt(jniValue));
 }
+```
 
 If you want to return an int for example, you will need to use FjavaWrapper::CallIntMethod instead.  As I didn't tried to return a value, I won't give your more details.
 
@@ -353,7 +372,7 @@ We will increase jniValue just below. If it's working fine, we will be able to d
 
 
 
-C++ method callable from Java
+### C++ method callable from Java
 
 
 During the next part we will see how to call a C++ function from Java. Here is how to properly define our function.
@@ -370,6 +389,7 @@ You can use differents type of variables
 
 
 
+![Java variables to JNI variables](https://github.com/Hydrafox/JarTuto/blob/master/img/Readme%20img3.png)
 
 
 
@@ -381,7 +401,7 @@ You can also get an array with jbyteArray. I didn't test for the others.
 - You have to keep the 2 first variables as parameters
 
 
-
+```cpp
 #if PLATFORM_ANDROID
 extern "C" bool Java_com_epicgames_ue4_GameActivity_GetJNIData(JNIEnv* LocalJNIEnv, jobject LocalThiz, jint data)
 {	
@@ -389,6 +409,7 @@ extern "C" bool Java_com_epicgames_ue4_GameActivity_GetJNIData(JNIEnv* LocalJNIE
 	return JNI_TRUE;
 }
 #endif
+```
 
 
 
@@ -408,14 +429,14 @@ extern "C" bool Java_com_epicgames_ue4_GameActivity_GetJNIData(JNIEnv* LocalJNIE
 
 
 
-
-JNI -> Java
+## JNI -> Java
 
 
 Before starting this part, I recommand you to have this architecture in MyProject/Source
 
 
 
+![JarTuto Folder Architecture](https://github.com/Hydrafox/JarTuto/blob/master/img/Readme%20img4.png)
 
 
 
@@ -428,18 +449,20 @@ lib will contains our jar file, private contains our cpp files, public contains 
 
 We will add a link to our xml in our build.cs file, in the constructor
 
+```cpp
 if (Target.Platform == UnrealTargetPlatform.Android)
 {
 	string pluginPath = Utils.MakePathRelativeTo(ModuleDirectory, BuildConfiguration.RelativeEnginePath);
 	AdditionalPropertiesForReceipt.Add(new ReceiptProperty("AndroidPlugin", (pluginPath + "/JarTuto_APL.xml")));
         
 }
+```
 
-- JarTuto_APL.xml
+### - JarTuto_APL.xml
 
 Create your xml file, in the same directory as our build.cs, with these initial parameters. I kept the camera access and differents imports to help you to know where and how to place your component access.
 
-
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--ARToolKit plugin additions-->
 <root xmlns:android="http://schemas.android.com/apk/res/android">
@@ -501,11 +524,12 @@ We will insert our code between these tags
 
 	</insert>
 </gameActivityClassAdditions>
-
+```
 
 
 Add a signature of our C++ function which will be called
 
+```cpp
 public native boolean GetJNIData(int data);
 
 
@@ -527,6 +551,7 @@ public void AndroidThunkJava_GetMessage()
 		Log.debug("Failed with exception " + e.getMessage());
 	}
 }
+```
 
 We instantiate a TestJNI class which is the class contained in our jar file. This class has a testJNI method which return 250. If we successfully return this value, we will call our C++ function to increment our jniValue.
 
@@ -540,7 +565,7 @@ That's why we will see how to integrate a jar file to our code.
 
 
 
-Java -> Jar
+## Java -> Jar
 
 
 Before starting, I have some things to explain about how to have a good working jar. When I write this tutorial, the actual jdk version is 1.8.0_121 and CodeWorks make us installing the 1.8.0_77
@@ -548,7 +573,7 @@ Even by trying a lot, I wasn't able to make the 1.8 version working. That's why 
 If you want to compile with eclipse (or another software) you may prefer download the jre.
 
 
-- Creating a Jar file
+### - Creating a Jar file
 
 
 I will give you 3 ways to create your jar file. Before, I will ask you to place all your .java in a package named in our example: comPackage. Do not leave them in a default package (right click on your package -> new -> package and move your class inside).
@@ -582,7 +607,7 @@ If you used the 2 or 3 methods, you will need to create manually your jar file. 
 
 Now you have your class file. We will need to create a java project to check if we used the good jdk version to compile. Create a project and a main class. Copy this script and give it the link of your class file.
 
-
+```java
 String filename = "D:/my/path/folder/TestJNI.class"; // Change by your class path
     	
     	
@@ -614,7 +639,7 @@ Here is an array to interpret these values
  50       0           1.6
  51       0           1.7
  52       0           1.8
-
+```
 
 If you obtained 51 . 0 that mean you well compiled your java file with your 1.7 jdk
 
@@ -645,6 +670,7 @@ Proguard is used to modify the name of your class and protect your code. That's 
 I'm not sure when we need to use it because it's working for me even without it. If you have a problem to use your class, test to configure proguard.
 Here are some hint for you to test and search, they are not a working solution and are not tested, it's just for you to better search for your own solution.
 
+```xml
   <proguardAdditions>
     <insert>
       
@@ -652,7 +678,7 @@ Here are some hint for you to test and search, they are not a working solution a
 
     </insert>
   </proguardAdditions>
-
+```
 
 
 
@@ -661,19 +687,20 @@ We will need to duplicate our jar to the intermediate directory. Sometimes we de
 PluginDir is the directory where you have your _APL.xml file that you defined in build.cs when you had the AdditionalPropertiesForReceipt.Add(new ReceiptProperty("AndroidPlugin", (pluginPath + "/JarTuto_APL.xml")));
 BuildDir is the APK directory in your intermediate folder
 
-
+```xml
   <resourceCopies>
 
     <copyFile src="$S(PluginDir)/lib/myJar.jar" dst="$S(BuildDir)/libs/myJar.jar" />
   
   </resourceCopies>
-
+```
 
 
 Add the import ligne just below the others import in the gameActivityImportAdditions/insert
 
+```xml
 import comPackage.TestJNI;
-
+```
 
 
 
