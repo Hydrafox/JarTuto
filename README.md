@@ -504,7 +504,7 @@ If you want to compile with eclipse (or another software) you may prefer downloa
 I will give you 3 ways to create your jar file. Before, I will ask you to place all your .java in a package named in our example: *comPackage*. Do not leave them in a default package (right click on your package -> new -> package and move your class inside).
 
 
-- 1 - Eclipse
+1. Eclipse
 
 
 You have to set your jre first. Go to Project -> Properties -> Java Build Path -> Libraries tab, click on your JRE, and edit (on the right). Here you should be able to set your installation.
@@ -512,7 +512,7 @@ You have to set your jre first. Go to Project -> Properties -> Java Build Path -
 Select your project, File -> Export -> Java/JAR file -> Next -> Select your export destination and click on the Finish button
 
 
-- 2 - Command Line – Java Home
+2. Command Line – Java Home
 
 
 After installing CodeWorks, your Java_Home may point to this folder, and so the jdk used by Unreal. To find your Environment Variables (in Window 7) : Click on the Start button -> Right click on Computer -> Properties -> Advanced system settings -> Environment Variables... and set the *JAVA_HOME* variable to your *jdk 1.7* repertory (not the bin folder).
@@ -520,7 +520,7 @@ After installing CodeWorks, your Java_Home may point to this folder, and so the 
 Now you can find your .java file and compile them. Use Shift + Righ click to display the "Open command window here" option, and click on it. Now use the command line: javac fileName.java  or javac *.java  depending of your needs. 
 
 
-- 3 - Commande Line – No configuration need
+3. Commande Line – No configuration need
 
 The best method to rapidly test. Go to your jdk, and open its bin folder. Use Shift + Righ click to display the "Open command window here" option, and click on it. Now use the command line : 
 *javac.exe pathOfYourJavaFile.java*  It will compile your file to the pathOfYourJavaFile.java directory.
