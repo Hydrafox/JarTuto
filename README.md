@@ -632,10 +632,14 @@ import comPackage.TestJNI;
 
 
 
-Method not found
+### Method not found
 
 It can happens that your java method is not found or any other problem. That mean your xml is not read fine. You can try to delete the Binaries, Intermediate and Saved folder, right-click on your *MyProject.uproject* and click on *Generate Visual Studio project files*. Check if your xml content is still here, rebuild, compile launch again. Keep a look on your Unreal Output Logs, and also your adb logcat.
 
 
+### See also
 
+[Android Camera](https://forums.unrealengine.com/showthread.php?117571-Plugin-Android-Camera) You can check the Android Camera plug-in if you want to have another example of how to use JNI. 
+Special thanks to them, I would never do it without them :kissing:
 
+[Facebook](https://forums.unrealengine.com/showthread.php?134365-Plugin-FREE-Facebook-for-Android) The Facebook plugin bring some examples too about using a jar file.
